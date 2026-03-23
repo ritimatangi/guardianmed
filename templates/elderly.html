@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block title %}GuardianMed — Elderly Mode{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='elderly.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="elderly-app" id="elderly-app">
+    <!-- ── WebView Header ──────────────────────────── -->
+    <div class="webview-bar">
+        <span class="webview-dot"></span>
+        Running inside mobile WebView
+        <button class="dark-toggle" id="dark-toggle" title="Toggle Dark Mode">🌙</button>
+    </div>
+
+    <!-- ── Header ──────────────────────────────────── -->
+    <header class="elderly-header">
+        <span class="brand-icon">🛡️</span>
+        <span class="brand-text">GuardianMed</span>
+        <button class="fingerprint-btn" id="fingerprint-btn" title="Biometric Login">🔐</button>
+    </header>
+
+    <!-- ── Toast ───────────────────────────────────── -->
+    <div id="toast-container"></div>
+
+    <!-- ── Trust Approval Modal ────────────────────── -->
+    <div class="modal-overlay" id="trust-modal" style="display:none;">
+        <div class="modal-card">
+            <div class="modal-icon">🤖</div>
+            <h3 id="modal-title">AI Action Request</h3>
+            <p id="modal-desc">AI suggests an action. Do you approve?</p>
+            <div class="modal-actions">
+                <button class="btn-elderly btn-take" id="modal-approve" style="flex:1;">✔ Approve</button>
+                <button class="btn-elderly btn-miss" id="modal-cancel" style="flex:1;">❌ Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Offline Banner ──────────────────────────── -->
+    <div class="offline-banner" id="offline-banner" style="display:none;">
+        📡 You are offline. Showing cached data.
+    </div>
+
+    <!-- ── Tab Content ─────────────────────────────── -->
+    <div class="tab-content" id="tab-today" style="display:block;">
+        <!-- Guardian Score Circle -->
+        <div class="elderly-score-section">
+            <svg class="elderly-score-ring" viewBox="0 0 200 200">
+                <circle class="ring-bg" cx="100" cy="100" r="85" />
+                <circle class="ring-fill" id="e-score-ring" cx="100" cy="100" r="85" />
+                <text class="ring-score" id="e-score-text" x="100" y="90" dominant-baseline="central" text-anchor="middle">—</text>
+                <text class="ring-label" x="100" y="125" text-anchor="middle" dominant-baseline="central">Guardian Score</text>
+            </svg>
+            <div class="score-level-text" id="e-score-level">Loading…</div>
+            <div class="score-explanation-elderly" id="e-score-explanation"></div>
+        </div>
+
+        <!-- Next Medicine Card -->
+        <div class="next-med-card" id="next-med-card">
+            <h2>Next Medicine</h2>
+            <div class="next-med-info" id="next-med-info">Loading…</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn-elderly btn-take" id="btn-take" disabled>
+                ✅ I TOOK IT
+            </button>
+            <button class="btn-elderly btn-miss" id="btn-miss" disabled>
+                ❌ I MISSED IT
+            </button>
+        </div>
+
+        <!-- AI Suggestion Card (Elderly) -->
+        <div class="elderly-ai-card" id="elderly-ai-card" style="display:none;">
+            <div class="elderly-ai-icon">🧠</div>
+            <div class="elderly-ai-text" id="elderly-ai-text"></div>
+            <div class="elderly-ai-actions">
+                <button class="btn-elderly btn-take" id="elderly-ai-approve" style="font-size:16px;min-height:50px;">✔ Approve</button>
+                <button class="btn-elderly btn-miss" id="elderly-ai-dismiss" style="font-size:16px;min-height:50px;">✗ Dismiss</button>
+            </div>
+        </div>
+
+        <!-- Voice Assistant -->
+        <div class="voice-section">
+            <button class="btn-elderly btn-voice" id="btn-voice">
+                🎤 Talk to Me
+            </button>
+            <div class="voice-fallback" id="voice-fallback" style="display:none;">
+                ⚠️ Voice not supported in this browser. Please use Chrome.
+            </div>
+            <div class="transcript-area" id="transcript-area" style="display:none;">
+                <div class="transcript-label">You said:</div>
+                <div class="transcript-text" id="transcript-text"></div>
+            </div>
+            <div class="tts-area" id="tts-area" style="display:none;">
+                <div class="tts-label">Assistant:</div>
+                <div class="tts-text" id="tts-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab: All Medicines -->
+    <div class="tab-content" id="tab-medicines" style="display:none;">
+        <h2 class="tab-title">My Medicines</h2>
+        <div class="elderly-meds-list" id="elderly-meds-list">Loading…</div>
+    </div>
+
+    <!-- Tab: Emergency -->
+    <div class="tab-content" id="tab-emergency" style="display:none;">
+        <h2 class="tab-title">Emergency</h2>
+        <div class="emergency-card">
+            <div class="emergency-icon">🚨</div>
+            <p>If you feel unwell or need help, press the button below.</p>
+            <a href="/sos" class="btn-elderly btn-sos-link">Open Emergency Card</a>
+            <div class="emergency-contact">
+                <strong>Emergency Contact:</strong><br>
+                Priya Kumar — +91 98765 43210
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Architecture Footer ────────────────────── -->
+    <div class="arch-footer-elderly">
+        Hybrid Architecture: Native Shell + WebView + Flask Backend + AI Logic
+    </div>
+
+    <!-- ── Bottom Navigation ───────────────────────── -->
+    <nav class="bottom-nav">
+        <button class="bnav-btn active" data-tab="tab-today">
+            <span class="bnav-icon">📋</span>
+            <span class="bnav-label">Today</span>
+        </button>
+        <button class="bnav-btn" data-tab="tab-medicines">
+            <span class="bnav-icon">💊</span>
+            <span class="bnav-label">All Meds</span>
+        </button>
+        <button class="bnav-btn" data-tab="tab-emergency">
+            <span class="bnav-icon">🚨</span>
+            <span class="bnav-label">Emergency</span>
+        </button>
+    </nav>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        initElderlyMode();
+    });
+</script>
+{% endblock %}

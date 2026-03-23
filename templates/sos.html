@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}GuardianMed — Emergency SOS{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<style>
+    @media print {
+        .topnav, .sos-actions { display: none !important; }
+        .sos-page { padding: 10px !important; }
+        .sos-card { box-shadow: none !important; border: 2px solid #333 !important; }
+    }
+    .sos-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+    .sos-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+        padding: 40px;
+    }
+    .sos-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border-bottom: 3px solid #E24B4A;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+    .sos-header h1 {
+        font-size: 28px;
+        color: #E24B4A;
+    }
+    .sos-header .sos-badge {
+        background: #E24B4A;
+        color: #fff;
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    .patient-info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .patient-photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #E8ECF0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 48px;
+        flex-shrink: 0;
+    }
+    .patient-details h2 { font-size: 24px; margin-bottom: 6px; }
+    .patient-details p { color: #666; font-size: 15px; }
+    .sos-section { margin-bottom: 28px; }
+    .sos-section h3 {
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #666;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 6px;
+    }
+    .sos-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    .sos-table th,
+    .sos-table td {
+        padding: 10px 14px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+        font-size: 15px;
+    }
+    .sos-table th {
+        background: #F7F9FB;
+        font-weight: 600;
+        color: #444;
+    }
+    .sos-score-row {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    .sos-score-num {
+        font-size: 40px;
+        font-weight: 800;
+    }
+    .sos-score-label {
+        font-size: 15px;
+        color: #666;
+    }
+    .sos-emergency-contact {
+        background: #FFF5F5;
+        border: 1px solid #E24B4A;
+        border-radius: 12px;
+        padding: 20px;
+    }
+    .sos-emergency-contact strong { font-size: 18px; }
+    .sos-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<nav class="topnav">
+    <div class="topnav-inner">
+        <div class="topnav-brand">
+            <span class="brand-icon">🛡️</span>
+            <span class="brand-text">GuardianMed</span>
+        </div>
+        <div class="topnav-links">
+            <a href="/caregiver" class="nav-link">Dashboard</a>
+            <a href="/elderly" class="nav-link">Elderly Mode</a>
+        </div>
+    </div>
+</nav>
+
+<div class="sos-page">
+    <div class="sos-card">
+        <div class="sos-header">
+            <h1>🚨 Emergency Medical Card</h1>
+            <span class="sos-badge">SOS</span>
+        </div>
+
+        <div class="patient-info">
+            <div class="patient-photo">👤</div>
+            <div class="patient-details">
+                <h2>Rajesh Kumar</h2>
+                <p>Age: 72 · Male · Blood Group: B+</p>
+                <p>Patient ID: GM-2024-001</p>
+            </div>
+        </div>
+
+        <div class="sos-section">
+            <h3>Current Medicines</h3>
+            <table class="sos-table" id="sos-medicines-table">
+                <thead>
+                    <tr>
+                        <th>Medicine</th>
+                        <th>Dose</th>
+                        <th>Frequency</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody id="sos-medicines-body">
+                    <tr><td colspan="4">Loading…</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sos-section">
+            <h3>Known Allergies</h3>
+            <p>Penicillin, Sulfa drugs</p>
+        </div>
+
+        <div class="sos-section">
+            <h3>Guardian Score Snapshot</h3>
+            <div class="sos-score-row">
+                <span class="sos-score-num" id="sos-score">—</span>
+                <div>
+                    <div class="sos-score-label" id="sos-score-level">Loading…</div>
+                    <div class="sos-score-label" id="sos-score-reason"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="sos-section">
+            <h3>Emergency Contact</h3>
+            <div class="sos-emergency-contact">
+                <strong>Priya Kumar (Daughter)</strong><br>
+                📞 +91 98765 43210<br>
+                ✉️ priya.kumar@email.com<br>
+                🏠 42 Sector 15, Gurgaon, Haryana
+            </div>
+        </div>
+
+        <div class="sos-actions">
+            <button class="btn btn-primary" onclick="window.print()">🖨️ Print Card</button>
+            <button class="btn btn-outline" onclick="navigator.share && navigator.share({title:'Emergency Card', url:window.location.href}).catch(()=>{})">📤 Share</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    initSOSPage();
+});
+</script>
+{% endblock %}

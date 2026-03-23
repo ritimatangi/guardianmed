@@ -1,0 +1,317 @@
+/* ══════════════════════════════════════════════════════════
+   GuardianMed — Elderly Mode Styles
+   Large fonts, high contrast, big tap targets, dark mode
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+    --green: #1D9E75;
+    --green-light: #E6F9F1;
+    --red: #E24B4A;
+    --red-light: #FFF0F0;
+    --blue: #185FA5;
+    --amber: #BA7517;
+    --purple: #7C3AED;
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --bg: #FFFFFF;
+    --card-bg: #F8F9FA;
+    --border: #DDE0E4;
+}
+
+/* ── Dark Mode ────────────────────────────────────────── */
+body.dark-mode {
+    --bg: #0F1117;
+    --card-bg: #1A1D27;
+    --border: #2D3140;
+    --text: #E8ECF0;
+    --text-muted: #9CA3AF;
+    --green-light: #0D2E22;
+    --red-light: #2E1515;
+}
+body.dark-mode .elderly-app { background: var(--bg); }
+body.dark-mode .elderly-header { background: var(--card-bg); border-color: var(--border); }
+body.dark-mode .next-med-card { background: var(--green-light); border-color: var(--green); }
+body.dark-mode .elderly-med-card { background: var(--card-bg); border-color: var(--border); }
+body.dark-mode .bottom-nav { background: var(--card-bg); border-color: var(--border); }
+body.dark-mode .bnav-btn.active { background: var(--green-light); }
+body.dark-mode .transcript-area, body.dark-mode .tts-area { background: var(--card-bg); }
+body.dark-mode .emergency-contact { background: var(--red-light); }
+body.dark-mode .modal-card { background: var(--card-bg); }
+
+/* ── WebView Header ───────────────────────────────────── */
+.webview-bar {
+    background: linear-gradient(135deg, #185FA5 0%, #7C3AED 100%);
+    color: #fff;
+    text-align: center;
+    padding: 6px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.webview-dot {
+    width: 7px; height: 7px;
+    background: #4ADE80;
+    border-radius: 50%;
+    display: inline-block;
+    animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{ opacity:1; } 50%{ opacity:0.3; } }
+.dark-toggle {
+    background: rgba(255,255,255,0.2);
+    border: none; border-radius: 6px;
+    padding: 3px 8px; cursor: pointer;
+    font-size: 14px; margin-left: auto;
+    transition: all 0.2s;
+}
+.dark-toggle:hover { background: rgba(255,255,255,0.35); }
+
+.elderly-app {
+    background: var(--bg);
+    min-height: 100vh;
+    padding-bottom: 110px;
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--text);
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.elderly-header {
+    text-align: center;
+    padding: 14px 20px;
+    border-bottom: 2px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0; z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.elderly-header .brand-icon { font-size: 30px; }
+.elderly-header .brand-text {
+    font-size: 24px; font-weight: 800; color: var(--green);
+}
+.fingerprint-btn {
+    position: absolute; right: 16px;
+    background: none; border: 2px solid var(--border);
+    border-radius: 10px; padding: 6px 10px;
+    font-size: 22px; cursor: pointer;
+    transition: all 0.2s;
+}
+.fingerprint-btn:hover { border-color: var(--green); background: var(--green-light); }
+
+/* ── Offline Banner ───────────────────────────────────── */
+.offline-banner {
+    background: var(--amber);
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* ── Trust Modal ──────────────────────────────────────── */
+.modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+}
+.modal-card {
+    background: var(--bg);
+    border-radius: 20px; padding: 32px;
+    max-width: 420px; width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: modalIn 0.3s ease;
+}
+@keyframes modalIn { from { opacity:0; transform:scale(0.9) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+.modal-icon { font-size: 48px; margin-bottom: 12px; }
+.modal-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+.modal-card p { font-size: 18px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
+.modal-actions { display: flex; gap: 12px; justify-content: center; }
+
+/* ── Toast ────────────────────────────────────────────── */
+#toast-container {
+    position: fixed; top: 40px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; flex-direction: column; gap: 8px;
+    width: calc(100% - 40px); max-width: 560px;
+}
+.toast {
+    padding: 14px 20px; border-radius: 12px;
+    font-size: 17px; font-weight: 600;
+    color: #fff; background: var(--green);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    text-align: center;
+    animation: toastIn 0.3s ease, toastOut 0.3s ease 2.8s forwards;
+}
+.toast.warn { background: var(--amber); }
+.toast.error { background: var(--red); }
+.toast.info { background: var(--blue); }
+@keyframes toastIn { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes toastOut { to { opacity:0; transform:translateY(-20px); } }
+
+/* ── Tab Content ──────────────────────────────────────── */
+.tab-content { padding: 16px; }
+.tab-title {
+    font-size: 32px; font-weight: 800;
+    margin-bottom: 16px; color: var(--text);
+}
+
+/* ── Score Section ────────────────────────────────────── */
+.elderly-score-section { text-align: center; margin-bottom: 20px; }
+.elderly-score-ring { width: 190px; height: 190px; }
+.elderly-score-ring .ring-bg { fill: none; stroke: var(--border); stroke-width: 12; }
+.elderly-score-ring .ring-fill {
+    fill: none; stroke: var(--green); stroke-width: 12;
+    stroke-linecap: round; stroke-dasharray: 534; stroke-dashoffset: 534;
+    transform: rotate(-90deg); transform-origin: center;
+    transition: stroke-dashoffset 1.2s ease, stroke 0.6s ease;
+}
+.elderly-score-ring .ring-score { font-size: 46px; font-weight: 800; fill: var(--text); }
+.elderly-score-ring .ring-label { font-size: 13px; fill: var(--text-muted); font-weight: 500; }
+.score-level-text { font-size: 22px; font-weight: 700; margin-top: 6px; }
+.score-explanation-elderly {
+    font-size: 16px; color: var(--text-muted); margin-top: 8px;
+    padding: 10px 14px; background: var(--card-bg);
+    border-radius: 10px; line-height: 1.5;
+}
+
+/* ── Next Medicine Card ───────────────────────────────── */
+.next-med-card {
+    background: var(--green-light); border: 2px solid var(--green);
+    border-radius: 16px; padding: 20px; margin-bottom: 20px;
+}
+.next-med-card h2 { font-size: 22px; font-weight: 700; color: var(--green); margin-bottom: 10px; }
+.next-med-info { font-size: 20px; font-weight: 600; color: var(--text); line-height: 1.5; }
+.next-med-time { font-size: 26px; font-weight: 800; color: var(--green); display: block; margin-top: 6px; }
+.no-more-meds { font-size: 20px; color: var(--green); }
+
+/* ── Action Buttons ───────────────────────────────────── */
+.action-buttons {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin-bottom: 20px;
+}
+.btn-elderly {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 66px; border: none; border-radius: 14px;
+    font-family: inherit; font-size: 20px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s ease;
+    text-decoration: none; padding: 14px 18px;
+}
+.btn-elderly:active { transform: scale(0.97); }
+.btn-take { background: var(--green); color: #fff; }
+.btn-take:hover:not(:disabled) { background: #178b65; }
+.btn-take:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-miss { background: var(--red); color: #fff; }
+.btn-miss:hover:not(:disabled) { background: #c93a39; }
+.btn-miss:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── AI Suggestion Card (Elderly) ─────────────────────── */
+.elderly-ai-card {
+    padding: 20px; border-radius: 16px;
+    border: 2px solid var(--purple);
+    background: linear-gradient(135deg, var(--bg) 0%, #F3EEFF 100%);
+    margin-bottom: 20px;
+}
+body.dark-mode .elderly-ai-card { background: linear-gradient(135deg, var(--card-bg) 0%, #1D1530 100%); }
+.elderly-ai-icon { font-size: 36px; text-align: center; margin-bottom: 8px; }
+.elderly-ai-text {
+    font-size: 18px; color: var(--text); line-height: 1.5;
+    margin-bottom: 14px; text-align: center;
+}
+.elderly-ai-actions { display: flex; gap: 10px; }
+.elderly-ai-actions .btn-elderly { flex: 1; }
+
+/* ── Voice Section ────────────────────────────────────── */
+.voice-section { margin-bottom: 20px; }
+.btn-voice {
+    width: 100%; background: var(--blue); color: #fff;
+    font-size: 22px; min-height: 66px; margin-bottom: 12px;
+}
+.btn-voice:hover { background: #14508c; }
+.btn-voice.listening {
+    background: var(--red);
+    animation: pulse 1.2s infinite;
+}
+@keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(226,75,74,0.4); }
+    50% { box-shadow: 0 0 0 14px rgba(226,75,74,0); }
+}
+.voice-fallback {
+    padding: 14px; background: var(--red-light);
+    border: 1px solid var(--red); border-radius: 12px;
+    font-size: 17px; color: var(--red); text-align: center; font-weight: 500;
+}
+.transcript-area, .tts-area {
+    padding: 14px; background: var(--card-bg);
+    border-radius: 12px; margin-bottom: 10px;
+}
+.transcript-label, .tts-label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px; }
+.transcript-text { font-size: 20px; font-weight: 500; color: var(--text); }
+.tts-text { font-size: 20px; font-weight: 500; color: var(--green); }
+
+/* ── Elderly Meds List ────────────────────────────────── */
+.elderly-meds-list { display: flex; flex-direction: column; gap: 12px; }
+.elderly-med-card {
+    padding: 18px; background: var(--card-bg);
+    border: 2px solid var(--border); border-radius: 14px;
+}
+.elderly-med-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.elderly-med-card p { font-size: 18px; color: var(--text-muted); line-height: 1.5; }
+
+/* ── Emergency Tab ────────────────────────────────────── */
+.emergency-card { text-align: center; padding: 20px; }
+.emergency-icon { font-size: 60px; margin-bottom: 14px; }
+.emergency-card p { font-size: 20px; margin-bottom: 20px; color: var(--text); line-height: 1.5; }
+.btn-sos-link {
+    background: var(--red); color: #fff;
+    width: 100%; font-size: 22px;
+    min-height: 74px; margin-bottom: 20px;
+}
+.btn-sos-link:hover { background: #c93a39; }
+.emergency-contact {
+    background: var(--red-light); border: 2px solid var(--red);
+    border-radius: 14px; padding: 18px;
+    font-size: 18px; text-align: left; line-height: 1.6;
+}
+
+/* ── Architecture Footer (Elderly) ────────────────────── */
+.arch-footer-elderly {
+    text-align: center;
+    padding: 14px;
+    font-size: 11px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    letter-spacing: 0.03em;
+}
+
+/* ── Bottom Navigation ────────────────────────────────── */
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: var(--bg); border-top: 2px solid var(--border);
+    display: flex; justify-content: center; gap: 0;
+    padding: 6px 16px;
+    padding-bottom: max(6px, env(safe-area-inset-bottom));
+    z-index: 100; max-width: 600px; margin: 0 auto;
+}
+.bnav-btn {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; gap: 3px;
+    padding: 8px 6px; background: none; border: none;
+    border-radius: 10px; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+    min-height: 56px; justify-content: center;
+}
+.bnav-btn:hover { background: var(--card-bg); }
+.bnav-btn.active { background: var(--green-light); }
+.bnav-icon { font-size: 24px; }
+.bnav-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.bnav-btn.active .bnav-label { color: var(--green); }

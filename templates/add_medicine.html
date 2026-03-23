@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}GuardianMed — {% if medicine %}Edit{% else %}Add{% endif %} Medicine{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+<nav class="topnav">
+    <div class="topnav-inner">
+        <div class="topnav-brand">
+            <span class="brand-icon">🛡️</span>
+            <span class="brand-text">GuardianMed</span>
+        </div>
+        <div class="topnav-links">
+            <a href="/caregiver" class="nav-link">← Back to Dashboard</a>
+        </div>
+    </div>
+</nav>
+
+<main class="form-page">
+    <div class="card form-card">
+        <h1>{% if medicine %}Edit Medicine{% else %}Add New Medicine{% endif %}</h1>
+        <form id="medicine-form">
+            {% if medicine %}
+            <input type="hidden" id="med-id" value="{{ medicine.id }}">
+            {% endif %}
+
+            <div class="form-group">
+                <label for="med-name">Medicine Name *</label>
+                <input type="text" id="med-name" required
+                       value="{{ medicine.name if medicine else '' }}"
+                       placeholder="e.g. Metformin">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="med-dose">Dose *</label>
+                    <input type="text" id="med-dose" required
+                           value="{{ medicine.dose if medicine else '' }}"
+                           placeholder="e.g. 500mg">
+                </div>
+                <div class="form-group">
+                    <label for="med-frequency">Frequency *</label>
+                    <select id="med-frequency">
+                        <option value="once daily" {% if medicine and medicine.frequency == 'once daily' %}selected{% endif %}>Once Daily</option>
+                        <option value="twice daily" {% if medicine and medicine.frequency == 'twice daily' %}selected{% endif %}>Twice Daily</option>
+                        <option value="three times daily" {% if medicine and medicine.frequency == 'three times daily' %}selected{% endif %}>Three Times Daily</option>
+                        <option value="as needed" {% if medicine and medicine.frequency == 'as needed' %}selected{% endif %}>As Needed</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Schedule Times *</label>
+                <div class="times-input" id="times-input">
+                    <!-- Times will be managed by JS -->
+                </div>
+                <button type="button" class="btn btn-sm btn-outline" id="add-time-btn">+ Add Time</button>
+            </div>
+
+            <div class="form-group">
+                <label for="med-class">Drug Class</label>
+                <input type="text" id="med-class"
+                       value="{{ medicine.drug_class if medicine else '' }}"
+                       placeholder="e.g. biguanide, nsaid, statin">
+            </div>
+
+            <div class="form-group">
+                <label for="med-notes">Notes</label>
+                <textarea id="med-notes" rows="3"
+                          placeholder="Any special instructions…">{{ medicine.notes if medicine else '' }}</textarea>
+            </div>
+
+            <div class="form-actions">
+                <a href="/caregiver" class="btn btn-outline">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if medicine %}Update Medicine{% else %}Add Medicine{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    initMedicineForm();
+});
+</script>
+{% endblock %}

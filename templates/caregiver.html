@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% block title %}GuardianMed — Caregiver Dashboard{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+{% endblock %}
+
+{% block body %}
+<!-- ── WebView Header ─────────────────────────────── -->
+<div class="webview-bar">
+    <span class="webview-dot"></span>
+    Running inside mobile WebView
+    <button class="dark-toggle" id="dark-toggle" title="Toggle Dark Mode">🌙</button>
+</div>
+
+<!-- ── Top Navigation ─────────────────────────────── -->
+<nav class="topnav">
+    <div class="topnav-inner">
+        <div class="topnav-brand">
+            <span class="brand-icon">🛡️</span>
+            <span class="brand-text">GuardianMed</span>
+            <span class="brand-sub">Caregiver Dashboard</span>
+        </div>
+        <div class="topnav-right">
+            <!-- Patient Info -->
+            <div class="patient-label">👴 Patient: <strong>Rajesh Kumar</strong> (72y)</div>
+            <div class="topnav-links">
+                <a href="/caregiver" class="nav-link active">Dashboard</a>
+                <a href="/elderly" class="nav-link">Elderly Mode</a>
+                <a href="/sos" class="nav-link nav-sos">SOS</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ── Toast container ────────────────────────────── -->
+<div id="toast-container"></div>
+
+<!-- ── Trust Approval Modal ───────────────────────── -->
+<div class="modal-overlay" id="trust-modal" style="display:none;">
+    <div class="modal-card">
+        <div class="modal-icon">🤖</div>
+        <h3 id="modal-title">AI Action Request</h3>
+        <p id="modal-desc">AI suggests an action. Do you approve?</p>
+        <div class="modal-actions">
+            <button class="btn btn-primary" id="modal-approve">✔ Approve</button>
+            <button class="btn btn-outline" id="modal-cancel">❌ Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── Main Content ───────────────────────────────── -->
+<main class="dashboard">
+    <!-- Row 1: Guardian Score + Today's Schedule -->
+    <div class="dash-row dash-row-top">
+        <!-- Guardian Score Card -->
+        <div class="card score-card">
+            <div class="card-header">
+                <h2>Guardian Score</h2>
+                <span class="badge" id="score-level-badge">—</span>
+            </div>
+            <div class="score-ring-wrap">
+                <svg class="score-ring" viewBox="0 0 160 160">
+                    <circle class="ring-bg" cx="80" cy="80" r="70" />
+                    <circle class="ring-fill" id="score-ring-fill" cx="80" cy="80" r="70" />
+                    <text class="ring-score" id="score-text" x="80" y="80" dominant-baseline="central" text-anchor="middle">—</text>
+                </svg>
+            </div>
+            <div class="score-explanation" id="score-explanation"></div>
+            <div class="score-breakdown" id="score-breakdown"></div>
+            <ul class="score-reasons" id="score-reasons"></ul>
+        </div>
+
+        <!-- Today's Schedule -->
+        <div class="card schedule-card">
+            <div class="card-header">
+                <h2>Today's Schedule</h2>
+                <span class="schedule-date" id="schedule-date"></span>
+            </div>
+            <div class="table-wrap">
+                <table class="schedule-table" id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Medicine</th>
+                            <th>Dose</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        <tr><td colspan="5" class="loading-cell">Loading schedule…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2: AI Suggestions + ML Prediction -->
+    <div class="dash-row dash-row-full">
+        <div class="card ai-card">
+            <div class="card-header">
+                <h2>🧠 AI Assistant Suggestions</h2>
+                <span class="ai-badge">Agentic AI</span>
+            </div>
+            <div class="ai-suggestions" id="ai-suggestions">
+                <p class="loading-cell">Analyzing patterns…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 2b: ML Risk Prediction -->
+    <div class="dash-row dash-row-full">
+        <div class="card ml-card" id="ml-card">
+            <div class="card-header">
+                <h2>📊 ML Risk Prediction</h2>
+                <span class="ml-badge">Random Forest</span>
+            </div>
+            <div class="ml-content" id="ml-content">
+                <p class="loading-cell">Running prediction model…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 3: Behaviour Chart + Medicines -->
+    <div class="dash-row">
+        <!-- Behaviour Chart -->
+        <div class="card chart-card">
+            <div class="card-header"><h2>7-Day Adherence</h2></div>
+            <canvas id="adherence-chart" height="200"></canvas>
+            <div class="pattern-insights" id="pattern-insights"></div>
+        </div>
+
+        <!-- Medicines List -->
+        <div class="card meds-card">
+            <div class="card-header">
+                <h2>Medicines</h2>
+                <a href="/add-medicine" class="btn btn-sm btn-primary">+ Add</a>
+            </div>
+            <div class="meds-list" id="meds-list">
+                <p class="loading-cell">Loading medicines…</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row 4: Alerts + AI Chat -->
+    <div class="dash-row">
+        <!-- Active Alerts -->
+        <div class="card alerts-card">
+            <div class="card-header"><h2>Active Alerts</h2></div>
+            <div class="alerts-list" id="alerts-list">
+                <p class="loading-cell">Checking alerts…</p>
+            </div>
+        </div>
+
+        <!-- AI Chat -->
+        <div class="card chat-card">
+            <div class="card-header"><h2>AI Assistant</h2></div>
+            <div class="chat-messages" id="chat-messages">
+                <div class="chat-msg bot">
+                    <div class="msg-content">Hello! I'm your GuardianMed AI assistant. Ask me about medicines, schedules, or the Guardian Score.</div>
+                </div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-input" placeholder="Ask about medicines, score, schedule…" autocomplete="off">
+                <button class="btn btn-primary" id="chat-send">Send</button>
+            </div>
+            <div class="reasoning-chain" id="reasoning-chain" style="display:none;">
+                <strong>AI Reasoning:</strong>
+                <ul id="reasoning-list"></ul>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Row 6: Patient History -->
+    <div class="dash-row dash-row-full">
+        <div class="card history-card">
+            <div class="card-header">
+                <h2>📋 Patient History — Today</h2>
+                <span style="font-size:12px;color:var(--text-muted);">Rajesh Kumar (72y)</span>
+            </div>
+            <div class="patient-history" id="patient-history">
+                <p class="loading-cell">Loading activity…</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ── Architecture Footer ────────────────────────── -->
+<footer class="arch-footer">
+    Hybrid Architecture: Native Shell + WebView + Flask Backend + AI Logic
+</footer>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        initCaregiverDashboard();
+    });
+</script>
+{% endblock %}

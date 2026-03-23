@@ -1,0 +1,12 @@
+{
+  "interactions": [
+    {"drug_a": "aspirin", "drug_b": "ibuprofen", "severity": "high", "note": "Both NSAIDs — risk of GI bleeding"},
+    {"drug_a": "metformin", "drug_b": "alcohol", "severity": "high", "note": "Risk of lactic acidosis"},
+    {"drug_a": "warfarin", "drug_b": "aspirin", "severity": "high", "note": "Increased bleeding risk"},
+    {"drug_a": "lisinopril", "drug_b": "potassium", "severity": "medium", "note": "Risk of hyperkalemia"},
+    {"drug_a": "simvastatin", "drug_b": "amlodipine", "severity": "medium", "note": "Increased statin levels"},
+    {"drug_a": "metformin", "drug_b": "lisinopril", "severity": "low", "note": "Monitor kidney function when used together"},
+    {"drug_a": "aspirin", "drug_b": "metoprolol", "severity": "low", "note": "Aspirin may reduce antihypertensive effect"},
+    {"drug_a": "simvastatin", "drug_b": "warfarin", "severity": "medium", "note": "Statins may increase warfarin effect"}
+  ]
+}
