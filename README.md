@@ -1,8 +1,4 @@
-Got it 👍 — here is your **FINAL CLEAN README.md FILE** (no extra explanation, ready to paste into GitHub)
 
----
-
-```markdown
 # 🏥 GuardianMed: Intelligent Medication Adherence System
 
 > 🚀 Transforming healthcare from reactive → proactive using AI & Machine Learning
