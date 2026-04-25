@@ -193,25 +193,6 @@ http://127.0.0.1:5000/
 ## 👩‍💻 Team
 
 * Riti Matangi
-* (Add teammates)
 
----
 
-## ⭐ Support
 
-If you like this project, give it a ⭐ on GitHub!
-
-```
-
----
-
-If you want next level 🔥  
-I can upgrade this with:
-
-- badges  
-- screenshots section  
-- demo video  
-- GitHub profile optimization  
-
-Just say 👍
-```
